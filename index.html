@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dizipal13 WebView</title>
+
+  <!-- Firebase App ve Firestore SDK (modüler) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getFirestore, doc, setDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+
+    // Firebase konfigürasyonu
+    const firebaseConfig = {
+      apiKey: "AIzaSyCdGcUecCRgfOgrTP0KynUpBZS2UOUNb-c",
+      authDomain: "dizipal2025.firebaseapp.com",
+      projectId: "dizipal2025",
+      storageBucket: "dizipal2025.firebasestorage.app",
+      messagingSenderId: "941545003583",
+      appId: "1:941545003583:web:e808de32db2316b632b68a",
+      measurementId: "G-G89Y3714L3"
+    };
+
+    // Firebase başlat
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Kullanıcı aktivitelerini kaydetme fonksiyonu
+    async function logAction(userId, action) {
+      // Son giriş zamanını güncelle
+      await setDoc(doc(db, "users", userId), { last_login_time: new Date() }, { merge: true });
+      // Aksiyonları kaydet
+      await addDoc(collection(db, "users", userId, "actions"), {
+        action: action,
+        timestamp: new Date()
+      });
+    }
+
+    // Sayfa açıldığında logla
+    window.onload = function() {
+      logAction("user123", "page_loaded");
+      // Yönlendirme
+      var redirectUrl = "https://dizipal13.plus"; // İstediğin zaman değiştirebilirsin
+      window.location.replace(redirectUrl);
+    };
+  </script>
+</head>
+<body>
+  <p>Eğer otomatik yönlendirme çalışmazsa, <a href="https://dizipal13.plus" target="_self">buraya tıklayın</a>.</p>
+</body>
+</html>
